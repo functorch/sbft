@@ -1,0 +1,33 @@
+version: 0.1
+cli:
+  version: 1.1.0
+plugins:
+  sources:
+    - id: trunk
+      ref: v0.0.6
+      uri: https://github.com/trunk-io/plugins
+lint:
+  enabled:
+    # Disable mypy until I figure out how to configure it properly
+    # Pylance is still in strict mode.
+    # - mypy@0.991
+    - actionlint@1.6.22
+    - taplo@0.7.0
+    - gitleaks@8.15.1
+    - prettier@2.8.0
+    - flake8@6.0.0
+    - markdownlint@0.32.2
+    - git-diff-check
+    - black@22.10.0
+    - isort@5.10.1
+runtimes:
+  enabled:
+    - go@1.18.3
+    - node@16.14.2
+    - python@3.10.3
+actions:
+  enabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+    - trunk-upgrade-available

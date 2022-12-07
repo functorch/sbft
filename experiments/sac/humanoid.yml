@@ -1,0 +1,27 @@
+actor_hidden_layers:
+  - 256
+  - 256
+actor_log_std_max: 2.0
+actor_log_std_min: -5.0
+batch_size: 256
+buffer_size: 1e6
+cuda: false
+cuda_deterministic: true
+cudnn_deterministic: true
+discount_factor: 0.99
+entropy_coef: 0.2
+env_id: Humanoid-v4
+exp_name: SAC_Humanoid
+learning_starts: 10000
+learning_timesteps: 1e6
+policy_lr: 3e-4
+policy_update_freq: 2
+polyak_factor: 0.005
+q_lr: 1e-3
+q_network_hidden_layers:
+  - 256
+  - 256
+seed: 0
+target_network_update_freq: 1
+tune_entropy: false
+wandb: false

@@ -1,0 +1,32 @@
+on:
+  pull_request: {}
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - .github/workflows/trunk.yml
+
+name: Trunk
+jobs:
+  trunk:
+    name: Check
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "poetry"
+          cache-dependency-path: "pyproject.toml"
+      - name: Install sbft
+        run: pip install '.[all]'
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1.0.4
+        with:
+          check-mode: all
+          arguments: --github-annotate-new-only=false

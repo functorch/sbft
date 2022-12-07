@@ -1,0 +1,27 @@
+name: AllTests
+on: pull_request
+concurrency:
+  group: all-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  all_tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10"]
+    runs-on: [self-hosted]
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "poetry"
+          cache-dependency-path: "pyproject.toml"
+      - name: Install sbft
+        run: pip install '.[all]'
+      - name: Run tests
+        run: pytest -vs --all

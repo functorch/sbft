@@ -5,10 +5,102 @@ description = ""
 authors = ["Aditya Gudimella <aditya.gudimella@gmail.com>"]
 readme = "README.md"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+sbft = "sbft.cli:cli_app"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+attrs = "^22.1.0"
+more-itertools = "^9.0.0"
+omegaconf = "^2.2.3"
+pydantic = "^1.10.2"
+rich = "^12.6.0"
+torch = "^1.13.0"
+torchsilk = { git = "git@github.com:functorch/torchsilk.git", branch = "main" }
+typer = { extras = ["all"], version = "^0.7.0" }
+autoflake = { version = "^1.4", optional = true }
+black = { version = "^22.3.0", optional = true }
+isort = { version = "^5.10.1", optional = true }
+mypy = { version = "^0.961", optional = true }
+pytest = { version = "^7.2.0", optional = true }
+pytest-vscodedebug = { version = "^0.1.0", optional = true }
+pyupgrade = { version = "^2.37.3", optional = true }
+# TODO: Remove after upgrading to python 3.11
+toml = { version = "^0.10.2", optional = true }
+xdoctest = { extras = ["all"], version = "^1.1.0", optional = true }
+gymnasium = { extras = [
+  "classic-control",
+  "mujoco",
+  "other",
+], version = "^0.26.3" }
+wandb = "^0.13.5"
+torchopt = "^0.5.0.post4"
+optree = "^0.5.0"
+
+[tool.poetry.extras]
+test = [
+  "autoflake",
+  "black",
+  "isort",
+  "mypy",
+  "pytest",
+  "pytest-vscodedebug",
+  "pyupgrade",
+  # Needed to test starting and stopping local ray cluster
+  "toml",
+  "xdoctest",
+]
+all = [
+  "autoflake",
+  "black",
+  "isort",
+  "mypy",
+  "pytest",
+  "pytest-vscodedebug",
+  "pyupgrade",
+  "toml",
+  "xdoctest",
+]
+
+[tool.pytest.ini_options]
+addopts = ["--strict-markers", "--xdoctest"]
+markers = [
+  "minutes: Test takes minutes to run",
+  "modifies: Test modifies system env. Meant to be run in pipelines",
+  "smoke: Test is a smoke test",
+  "unit_smoke: Test is a smoke test that does not test an entire algorithm",
+]
+filterwarnings = ["ignore::DeprecationWarning:pulumi_azure_native.*"]
+log_cli = true
+log_cli_level = "INFO"
+
+[tool.isort]
+profile = "black"
+default_section = "THIRDPARTY"
+known_first_party = ["sbft"]
+known_third_party = ["wandb"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+multi_line_output = 3
+
+[tool.mypy]
+disallow_any_unimported = false
+disallow_any_expr = false
+disallow_any_decorated = false
+disallow_subclassing_any = true
+disallow_untyped_defs = true
+files = "sbft"
+follow_imports = "error"
+incremental = false
+mypy_path = ['$MYPY_CONFIIG_FILE_DIR/stubs']
+no_implicit_reexport = false
+strict_equality = true
+warn_redundant_casts = true
+exclude = ['/site-packages/*']
+
+[[tool.mypy.overrides]]
+module = ["importlib_metadata", "nox", 'nox.sessions']
+ignore_missing_imports = true
